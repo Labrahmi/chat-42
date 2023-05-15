@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Welcom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <style>
+        body {
+            background: url('/assets/wp9127710.png');
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body class="px-4 text-white bg-slate-800">
+    <div class="flex justify-between py-6 md:py-6 px-1">
+        <a href="/" class="font-bold text-lg">
+            1337 Chat-Room
+        </a>
+        <div id="burger" class="cursor-pointer">
+            <box-icon class="fill-white scale-[1.5] md:hidden" name='menu'></box-icon>
+        </div>
+        <script>
+            let burger = document.getElementById('burger');
+            burger.addEventListener("click", () => {
+                let nav_sec = document.getElementById('nav_sec');
+
+                nav_sec.classList.toggle('-left-[100%]');
+                nav_sec.classList.toggle('left-[0%]');
+            })
+        </script>
+    </div>
+    <div style="height: calc(100vh - 12rem);" class="md:p-4 flex">
+        <!--  -->
+        <div id="nav_sec" style="max-height: calc(100vh - 12rem);" class="transition-all duration-300 fixed md:relative z-10 h-full w-4/5 md:w-[26rem] -left-[100%] md:left-0 flex flex-col py-4 border border-gray-600  bg-gray-800 bg-opacity-80 backdrop-blur rounded">
+            <a href="/" class="px-8 text-center font-medium text-lg w-full border-b border-gray-600 py-4">
+                Campus:<span class="text-lime-300 px-2">1337 <%= _campus %></span>
+            </a>
+            <div class="py-4 px-2">
+                <ul class="font-light">
+                    <a href="/dashboard/general" class="flex items-center hover:underline <% if (_current_ch == "general") { %> font-extrabold <% } %> text-xl p-2">
+                        <box-icon class="fill-white" name='hash'></box-icon>
+                        <div class="flex px-0.5"></div>
+                        <div href="">general 😍</div>
+                    </a>
+                    <div class="flex py-2"></div>
+                    <!--  -->
+                    <a href="/dashboard/announcement" class="flex items-center hover:underline <% if (_current_ch == "announcement") { %> font-extrabold <% } %> text-xl p-2">
+                        <box-icon class="fill-white" name='hash'></box-icon>
+                        <div class="flex px-0.5"></div>
+                        <div href="">fake announcement 😝</div>
+                    </a>
+                    <div class="flex py-2"></div>
+                    <!--  -->
+                    <a href="/dashboard/random" class="flex items-center hover:underline <% if (_current_ch == "random") { %> font-extrabold <% } %> text-xl p-2">
+                        <box-icon class="fill-white" name='hash'></box-icon>
+                        <div class="flex px-0.5"></div>
+                        <div href="">random (Anonymous) 👀</div>
+                    </a>
+                    <!--  -->
+                </ul>
+            </div>
+        </div>
+        <div class="flex md:px-3"></div>
+        <div id="chat_section" class="py-4 border bg-gray-700 border-gray-600 bg-opacity-70 backdrop-blur overflow-auto rounded w-full">
+            <div id="start">
+                <script>
+                    let all_array_srcp = [];
+                    let all_array_srcp_dislike = [];
+                    let scrp_like_users = [];
+                    let scrp_dislike_users = [];
+                </script>
+                <% for( let index = 0; index < _old_messages.length; index++ ) { %>
+                    <!-- /// -->
+                    <div class="class_test <% if ((index % 2) == 0) { %> bg-gray-800 <% } %> p-4 flex flex-col justify-between items-start">
+                        <div class="border-b border-b-gray-700 pb-1 w-full">
+                            <div class="font-medium <%= _old_messages[index]._sender_display_color %>">
+                                <%= _old_messages[index]._sender_display %>
+                            </div>
+                            <div class="p-2 text-gray-300 user_messages transition-all duration-150 overflow-auto <% if ((_old_messages[index]._dislike_users.length - _old_messages[index]._like_users.length) > 5) { %> blur-[3px] opacity-75 <% } %>">
+                                <%= _old_messages[index]._message %>
+                            </div>
+                        </div>
+                        <div class="flex py-1"></div>
+                        <div class="flex scale-90 select-none">
+                            <form class="like_form flex justify-center items-center" action="">
+                                <!--  -->
+                                <input class="like_msg_obj_id" type="hidden" id="like_msg_obj_id" value="<%= _old_messages[index]._id %>" name="like_msg_obj_id">
+                                <input class="like_msg_rmd" type="hidden" id="like_msg_rmd" value="<%= _old_messages[index]._rdm %>" name="like_msg_rmd">
+                                <div class="flex px-1 cursor-pointer like_form_butt fill-white">
+                                    <box-icon class="" type="solid" name='heart'></box-icon>
+                                </div>
+                                <!--  -->
+                                <span class="like_count"><%= _old_messages[index]._like_users.length %></span>
+                                <script>
+                                    scrp_like_users = [];
+                                    <% for( let srcp_index = 0; srcp_index < _old_messages[index]._like_users.length; srcp_index++ ) { %>
+                                        scrp_like_users.push('<%= _old_messages[index]._like_users[srcp_index] %>');
+                                    <% } %>
+                                    all_array_srcp.push(scrp_like_users);
+                                </script>
+                                <!--  -->
+                            </form>
+                            <!-- | -->
+                            <div class="flex px-2"></div>
+                            <!-- | -->
+                            <form class="dislike_form flex justify-center items-center" action="">
+                                <!--  -->
+                                <input type="hidden" id="dislike_msg_obj_id" class="dislike_msg_obj_id" value="<%= _old_messages[index]._id %>" name="dislike_msg_obj_id">
+                                <input  type="hidden" class="dislike_msg_rmd" id="dislike_msg_rmd" value="<%= _old_messages[index]._rdm %>" name="dislike_msg_rmd">
+                                <div class="flex px-1 cursor-pointer dislike_form_butt fill-white">
+                                    <box-icon class="" type="solid" name='dislike'></box-icon>
+                                </div>
+                                <!--  -->
+                                <span class="dislike_count"><%= _old_messages[index]._dislike_users.length %></span>
+                                <script>
+                                    scrp_dislike_users = [];
+                                    <% for( let srcp_index = 0; srcp_index < _old_messages[index]._dislike_users.length; srcp_index++ ) { %>
+                                        scrp_dislike_users.push('<%= _old_messages[index]._dislike_users[srcp_index] %>');
+                                    <% } %>
+                                    all_array_srcp_dislike.push(scrp_dislike_users);
+                                </script>
+                                <!--  -->
+                            </form>
+                            <div class="flex px-2"></div>
+                            <div class="flex justify-center items-center">
+                                <div class="flex px-1 cursor-pointer user_messages_vision">
+                                    <box-icon class="fill-white" name='low-vision'></box-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /// -->
+                <% } %>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+    <form id="messages_form" action="./send_message" method="post" class="flex justify-center md:px-4">
+        <div class=" w-[64rem] flex rounded relative md:px-4 py-4">
+            <input
+                maxlength="1000"
+                class="w-full p-4 rounded rounded-r-none focus-visible:outline-none bg-slate-900 border border-slate-600 text-white"
+                type="text" name="_message" id="_message">
+            <!-- /dashboard/general -->
+            <input
+                class="cursor-pointer bg-slate-900  w-32 rounded rounded-l-none text-white outline-none border border-slate-600 transition-all duration-100 hover:bg-slate-800"
+                type="submit" value="Send">
+        </div>
+    </form>
+</body>
+
+<script>
+    let user_messages;
+    let user_messages_vision;
+    <!--  -->
+    function flow_ly() {
+        user_messages = document.getElementsByClassName('user_messages');
+        user_messages_vision = document.getElementsByClassName('user_messages_vision');
+        for (let ix = 0; ix < user_messages.length; ix++) {
+            user_messages_vision[ix].addEventListener("click", () => {
+                user_messages[ix].classList.toggle('blur-[3px]');
+                user_messages[ix].classList.toggle('opacity-75');
+            });
+        }
+    }
+    window.addEventListener("load", flow_ly);
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    let _message = document.getElementById('_message');
+    let start = document.getElementById('start');
+    let messages_form = document.getElementById('messages_form');
+    let chat_section = document.getElementById('chat_section');
+    let channel = "";
+    window.addEventListener("load", () => {
+        chat_section.scrollTo(0, chat_section.scrollHeight);
+    });
+    messages_form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        channel = window.location.pathname;
+        if (_message.value.trim() != "") {
+            let objX = {
+                _message: _message.value.trim(),
+                _time: Date(),
+                _rdm: '<%= _rdm %>',
+                _channel: channel,
+            }
+            socket.emit("client" + window.location.pathname, objX);
+            _message.value = "";
+            _message.focus();
+        }
+        flow_ly();
+    });
+    socket.on("server" + window.location.pathname, function (msg) {
+        let _likes = msg._likes;
+        let _dislikes = msg._dislikes;
+        let _sender_display_color = msg._sender_display_color;
+        let my_dsplname = msg._sender_display;
+        let msg_message = msg._message;
+        let bg_message = "";
+        if (user_messages.length % 2 == 0)
+            bg_message = "bg-gray-800";
+        let divHTML = '<div class="class_test ' + bg_message + ' p-4 flex flex-col justify-between items-start"> <div class="border-b border-b-gray-600 pb-1 w-full"> <div class="font-medium ' + _sender_display_color + '"> ' + my_dsplname + ' </div> <div class="p-2 text-gray-300 user_messages transition-all duration-150 overflow-auto"> ' + msg_message + ' </div> </div> <div class="flex py-1"></div> <div class="flex scale-90 select-none"> <div class="flex justify-center items-center"> <a class="flex px-1" href=""> <box-icon class="fill-white" name="heart"></box-icon> </a> <span>' + _likes + '</span> </div> <div class="flex px-2"></div> <div class="flex justify-center items-center"> <a class="flex px-1" href=""> <box-icon class="fill-white" name="dislike"></box-icon> </a> <span>' + _dislikes + '</span> </div> <div class="flex px-2"></div> <div class="flex justify-center items-center"> <div class="flex px-1 cursor-pointer user_messages_vision"> <box-icon class="fill-white" name="low-vision"></box-icon> </div> </div> </div> </div>';
+        let newDiv = document.createElement("div");
+        newDiv.innerHTML = divHTML;
+        start.appendChild(newDiv);
+        chat_section.scrollTo(0, chat_section.scrollHeight);
+        flow_ly();
+    });
+</script>
+
+<script>
+    let like_forms = document.getElementsByClassName('like_form');
+    let dislike_forms = document.getElementsByClassName('dislike_form');
+
+    let like_form_butts = document.getElementsByClassName('like_form_butt');
+    let dislike_form_butts = document.getElementsByClassName('dislike_form_butt');
+
+    let like_counts = document.getElementsByClassName('like_count');
+    let dislike_counts = document.getElementsByClassName('dislike_count');
+
+    let like_msg_obj_ids = document.getElementsByClassName('like_msg_obj_id');
+    let dislike_msg_obj_ids = document.getElementsByClassName('dislike_msg_obj_id');
+
+    let like_msg_rmds = document.getElementsByClassName('like_msg_rmd');
+    let dislike_msg_rmds = document.getElementsByClassName('dislike_msg_rmd');
+
+    for (let ix_f = 0; ix_f < like_forms.length; ix_f++)
+    {
+        like_forms[ix_f].addEventListener("click", () => {
+            let likes_count_num = (Number) (like_counts[ix_f].innerHTML);
+            let msg_id = (like_msg_obj_ids[ix_f].value);
+            if (like_form_butts[ix_f].classList.contains('fill-rose-500')) {
+                like_counts[ix_f].innerHTML = (likes_count_num - 1);
+            } else {
+                like_counts[ix_f].innerHTML = (likes_count_num + 1);
+            }
+            like_form_butts[ix_f].classList.toggle("fill-rose-500");
+            let message_encap = {
+                _sender: '<%= _rdm %>',
+                _msg_id: msg_id,
+            }
+            socket.emit("client/add_like", message_encap);
+        });
+        <!-- | -->
+        dislike_forms[ix_f].addEventListener("click", () => {
+            let dislikes_count_num = (Number) (dislike_counts[ix_f].innerHTML);
+            let msg_id = (dislike_msg_obj_ids[ix_f].value);
+            if (dislike_form_butts[ix_f].classList.contains('fill-gray-500')) {
+                dislike_counts[ix_f].innerHTML = (dislikes_count_num - 1);
+            } else {
+                dislike_counts[ix_f].innerHTML = (dislikes_count_num + 1);
+            }
+            dislike_form_butts[ix_f].classList.toggle("fill-gray-500");
+            let message_encap = {
+                _sender: '<%= _rdm %>',
+                _msg_id: msg_id,
+            }
+            socket.emit("client/add_dislike", message_encap);
+        });
+    }
+</script>
+
+<script>
+    window.addEventListener("load", (e) => {
+        for (let al_a_sp_ixx = 0; al_a_sp_ixx < all_array_srcp.length; al_a_sp_ixx++) {
+
+            for (let al_a_iyy = 0; al_a_iyy < all_array_srcp[al_a_sp_ixx].length; al_a_iyy++) {
+                if (all_array_srcp[al_a_sp_ixx][al_a_iyy] == '<%= _rdm %>') {
+                    like_form_butts[al_a_sp_ixx].classList.toggle("fill-rose-500");
+                }
+            }
+            for (let al_a_iyy_2 = 0; al_a_iyy_2 < all_array_srcp_dislike[al_a_sp_ixx].length; al_a_iyy_2++) {
+                if (all_array_srcp_dislike[al_a_sp_ixx][al_a_iyy_2] == '<%= _rdm %>') {
+                    dislike_form_butts[al_a_sp_ixx].classList.toggle("fill-gray-500");
+                }
+            }
+
+        }
+    });
+</script>
+
+
+</html>
